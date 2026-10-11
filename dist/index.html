@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="사진 한 장으로 만나는 동물의 숲 닮은꼴. 시리즈 전체 주민 490명과 특수 캐릭터 76개 항목을 브라우저 AI로 비교해 보세요."
+    />
+    <title>숲속 닮은꼴 · Forest Match</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath fill='%23478366' d='M33 5C8 2 0 20 13 30C25 39 38 24 33 5Z'/%3E%3Cpath d='M9 35L26 15' stroke='%23faf7ed' stroke-width='3'/%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <header>
+      <a href="./" class="brand"
+        ><span class="leaf" aria-hidden="true">❧</span>FOREST MATCH<span
+          class="brand-sub"
+          >숲속 닮은꼴</span
+        ></a
+      ><span class="local-badge"><i></i> 사진은 내 브라우저에만</span>
+    </header>
+    <main>
+      <section class="intro">
+        <p class="eyebrow">A PHOTO. A LITTLE FOREST. A FAMILIAR FRIEND.</p>
+        <h1>동물의 숲에 산다면,<br />나는 <span>어떤 친구?</span></h1>
+        <p class="lede">
+          우리 집 고양이부터 오늘의 셀카까지.<br />사진 한 장에서 나와 닮은 숲속
+          친구를 만나보세요.
+        </p>
+        <div class="intro-stamp">
+          ALL SERIES<br /><b>566</b><br />FOREST FRIENDS
+        </div>
+      </section>
+      <section class="workspace">
+        <div class="upload-panel">
+          <div class="panel-heading">
+            <span class="step">01</span>
+            <h2>어떤 사진을 볼까요?</h2>
+          </div>
+          <input
+            id="file"
+            class="visually-hidden"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            aria-label="사진 파일 선택"
+          />
+          <button
+            id="drop-zone"
+            class="drop-zone"
+            type="button"
+            aria-label="사진 업로드"
+          >
+            <span id="upload-prompt"
+              ><span class="upload-icon" aria-hidden="true">↥</span
+              ><strong>사진을 끌어놓거나 눌러주세요</strong
+              ><span>JPG, PNG, WebP · 최대 12MB</span></span
+            ><img id="preview" alt="선택한 사진 미리보기" hidden />
+          </button>
+          <div class="photo-meta">
+            <span id="filename">주인공이 크게 나온 사진이면 더 좋아요.</span
+            ><button id="clear" class="quiet" hidden>사진 지우기 ×</button>
+          </div>
+          <div class="sample-row">
+            <span>가볍게 시작하기</span
+            ><button id="sample-cat" class="sample">
+              <img
+                src="./examples/cats.jpg"
+                alt=""
+                width="24"
+                height="24"
+              />고양이</button
+            ><button id="sample-villager" class="sample">
+              <img
+                src="./characters/373.webp"
+                alt=""
+                width="24"
+                height="24"
+              />잭슨</button
+            ><button id="sample-special" class="sample">
+              <img
+                src="./characters/518.webp"
+                alt=""
+                width="24"
+                height="24"
+              />여울
+            </button>
+          </div>
+          <label class="scope-label" for="scope"
+            >비교할 친구들<select id="scope">
+              <option value="all">전체 · 566개 항목</option>
+              <option value="villager">모든 시리즈 주민 · 490명</option>
+              <option value="nh">모여봐요 주민 · 417명</option>
+              <option value="special">특수 캐릭터 · 76개 항목</option>
+            </select></label
+          >
+          <button id="match" class="match-button" disabled>
+            <span id="match-label">닮은 친구 찾기</span
+            ><span class="match-arrow" aria-hidden="true">↗</span>
+          </button>
+          <p class="download-note">
+            첫 실행에는 AI 가중치 약 284MB와 추가 실행 파일을 내려받아요.<br />그다음
+            사진 분석은 내 브라우저에서 이루어집니다.
+          </p>
+          <div id="runtime" class="runtime" aria-live="polite">
+            <span id="light" class="light"></span>
+            <p id="status">사진을 선택하면 시작할 수 있어요.</p>
+            <progress
+              id="progress"
+              max="100"
+              value="0"
+              hidden
+              aria-label="현재 파일 다운로드 진행률"
+            ></progress>
+          </div>
+        </div>
+        <div class="result-panel">
+          <div class="panel-heading">
+            <span class="step">02</span>
+            <h2>나의 숲속 닮은꼴</h2>
+            <span id="scope-pill" class="pill">전체 566개</span>
+          </div>
+          <div id="empty" class="empty">
+            <div class="orbit" aria-hidden="true"></div>
+            <img
+              class="friend friend-top"
+              src="./characters/518.webp"
+              alt="여울"
+            /><img
+              class="friend friend-left"
+              src="./characters/373.webp"
+              alt="잭슨"
+            /><img
+              class="friend friend-right"
+              src="./characters/429.webp"
+              alt="패치"
+            />
+            <div class="empty-copy">
+              <span class="sparkle">✳</span>
+              <h3>우리, 같은 섬에서 만났나요?</h3>
+              <p>사진과 닮은 친구 TOP 5가 여기 나타나요.</p>
+            </div>
+          </div>
+          <div id="results" hidden aria-live="polite">
+            <p id="result-meta" class="result-meta"></p>
+            <article id="best" class="best-card">
+              <div class="winner-label">YOUR CLOSEST MATCH<b>01</b></div>
+              <div class="best-score">유사도<strong></strong></div>
+              <img alt="" />
+              <p class="dex-no"></p>
+              <h3></h3>
+              <p class="english"></p>
+              <div class="types"></div>
+            </article>
+            <div class="runner-heading">
+              이 친구들도 닮았어요 <span>02 — 05</span>
+            </div>
+            <div id="runners" class="runners"></div>
+            <p class="score-note">
+              유사도는 이미지 특징의 가까운 정도예요. 정답 확률이나 외모 점수가
+              아닙니다.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section class="catalog-section" id="catalog-section">
+        <div class="catalog-title">
+          <div>
+            <p class="eyebrow">MEET EVERYONE</p>
+            <h2>모든 친구가 비교 대상이에요.</h2>
+          </div>
+          <span class="catalog-total">주민 490명 + 특수 캐릭터 76개 항목</span>
+        </div>
+        <p class="catalog-description">
+          초기 시리즈부터 모여봐요 3.0까지. 콜라보 주민, 떠나간 주민, 너굴과
+          여울도 함께 있어요.
+        </p>
+        <div class="catalog-toolbar">
+          <input
+            id="catalog-search"
+            type="search"
+            placeholder="이름이나 동물 종류로 찾아보기"
+            aria-label="캐릭터 검색"
+          /><select id="catalog-filter" aria-label="도감 분류">
+            <option value="all">전체 도감</option>
+            <option value="villager">일반 주민</option>
+            <option value="nh">모여봐요 주민</option>
+            <option value="special">특수 캐릭터</option>
+          </select>
+        </div>
+        <p id="catalog-count" class="catalog-count" role="status">
+          도감을 불러오는 중…
+        </p>
+        <div id="catalog-grid" class="catalog-grid"></div>
+        <div class="catalog-pagination">
+          <button id="previous" disabled>← 이전</button
+          ><span id="page-label"></span
+          ><button id="next" disabled>다음 →</button>
+        </div>
+        <p class="catalog-description">
+          카드를 누르면 해당 캐릭터 이미지로 매칭을 시험할 수 있어요. 도감
+          검색과 위의 비교 범위는 별도로 설정됩니다.
+        </p>
+      </section>
+      <section class="explainer">
+        <div>
+          <span>01 / IMAGE TO IMAGE</span>
+          <h3>사진과 캐릭터를 비교해요</h3>
+          <p>
+            EmbeddingGemma 2가 사진의 특징을 읽고, 도감 속 모든 이미지와 같은
+            기준으로 비교합니다.
+          </p>
+        </div>
+        <div>
+          <span>02 / YOUR PHOTO STAYS HERE</span>
+          <h3>사진은 전송되지 않아요</h3>
+          <p>
+            선택한 사진을 외부 서버로 보내거나 저장하지 않습니다. 분석은 내
+            브라우저의 GPU에서.
+          </p>
+        </div>
+        <div>
+          <span>03 / JUST FOR FUN</span>
+          <h3>뜻밖의 닮은꼴을 즐겨요</h3>
+          <p>
+            배경·구도·색과 사물의 특징도 결과에 영향을 줍니다. 얼굴 인식이나
+            성격 진단은 하지 않아요.
+          </p>
+        </div>
+      </section>
+      <details>
+        <summary>도감 범위와 이미지 출처 <span>+</span></summary>
+        <p>
+          2026년 10월 11일 확인한 Nookipedia의 시리즈 전체 주민 490명과 특수
+          캐릭터 목록을 기준으로 합니다. 일반 주민에는 모여봐요 3.0의 417명,
+          과거 작품 및 콜라보 주민을 포함합니다. 특수 캐릭터는 76개 이미지
+          항목이며 콩돌이·밤돌이는 한 팀으로, DJ K.K.·도토리옹·해적은 별도
+          모습으로 수록했습니다.
+        </p>
+        <p>
+          정해진 외형이 없는 플레이어·부모, 화면에 실체가 없는 Somebody·디버그용
+          Xsq, 미등장·삭제 캐릭터 및 모든 의상 변형은 포함하지 않습니다. 각
+          캐릭터의 대표 이미지 한 장을 비교하며 오래된 캐릭터는 당시 아트워크나
+          모델 이미지를 사용합니다. 한국어 이름을 확인하지 못한 항목은 영문
+          이름으로 표시합니다.
+        </p>
+        <p>
+          캐릭터 정보·이미지:
+          <a
+            href="https://nookipedia.com/wiki/List_of_villagers"
+            target="_blank"
+            rel="noreferrer"
+            >Nookipedia 주민 목록 ↗</a
+          >
+          ·
+          <a
+            href="https://nookipedia.com/wiki/Category:Special_characters"
+            target="_blank"
+            rel="noreferrer"
+            >특수 캐릭터 목록 ↗</a
+          >. 정보는
+          <a
+            href="https://creativecommons.org/licenses/by-sa/4.0/"
+            target="_blank"
+            rel="noreferrer"
+            >CC BY-SA 4.0</a
+          >에 따라 편집·번역했습니다. 한국어 이름 보완:
+          <a
+            href="https://github.com/lindsaygelle/nook"
+            target="_blank"
+            rel="noreferrer"
+            >nook 데이터셋</a
+          >. 이미지 저작권은 Nintendo 등 원권리자에게 있으며, 각 카드의 출처
+          링크에서 원본을 확인할 수 있습니다.
+        </p>
+      </details>
+      <details>
+        <summary>AI는 어떻게 작동하나요? <span>+</span></summary>
+        <p>
+          566개 도감 이미지를 미리 768차원 벡터로 만들었습니다. 사진을 선택하면
+          동일한 EmbeddingGemma 2 모델로 사진 벡터를 만들고, 선택한 범위의 모든
+          캐릭터와 코사인 유사도를 계산해 상위 다섯 항목을 보여줍니다. 모델은
+          4비트 텍스트·이미지 구성으로 WebGPU에서 실행합니다. 토큰 처리와 순위
+          계산에는 CPU도 사용합니다.
+        </p>
+        <p>
+          모델과 실행 파일은 Hugging Face 및 jsDelivr에서 받습니다. 캐시 유지
+          여부는 브라우저 설정에 따라 달라집니다. 최신 Chrome 또는 Edge와
+          WebGPU가 필요하며, HEIC는 지원하지 않습니다. 동물의 숲 식별 전용으로
+          학습한 모델이 아니므로 결과가 사람의 직관과 다를 수 있어요.
+        </p>
+      </details>
+    </main>
+    <footer>
+      <div>
+        <b>FOREST MATCH</b>
+        <p>
+          비공식 팬 실험 · Animal Crossing © Nintendo. Nintendo와 무관합니다.
+        </p>
+      </div>
+      <nav aria-label="자료 출처">
+        <a
+          href="https://nookipedia.com/wiki/List_of_villagers"
+          target="_blank"
+          rel="noreferrer"
+          >Nookipedia ↗</a
+        ><a
+          href="https://huggingface.co/onnx-community/embeddinggemma-2-ONNX"
+          target="_blank"
+          rel="noreferrer"
+          >EmbeddingGemma 2 ↗</a
+        ><a
+          href="https://huggingface.co/datasets/Xenova/transformers.js-docs"
+          target="_blank"
+          rel="noreferrer"
+          >고양이 예시 출처 ↗</a
+        >
+      </nav>
+    </footer>
+    <template id="runner-template">
+      <article class="runner">
+        <span></span><img alt="" />
+        <h4></h4>
+        <p></p>
+      </article>
+    </template>
+    <template id="catalog-template">
+      <article class="catalog-card">
+        <button type="button">
+          <img alt="" loading="lazy" width="92" height="92" /><strong></strong
+          ><small></small>
+        </button>
+        <a target="_blank" rel="noreferrer">이미지 출처 ↗</a>
+      </article>
+    </template>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

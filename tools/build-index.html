@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ko">
+  <meta charset="utf-8" /><title>동물의 숲 도감 준비</title>
+  <h1>공개 동물의 숲 이미지 벡터 생성</h1>
+  <button id="build">전체 캐릭터 벡터 생성</button>
+  <p id="status" role="status">대기</p>
+  <label
+    >생성된 도감 JSON<textarea
+      id="output"
+      style="display: block; width: 90%; height: 300px"
+    ></textarea>
+  </label>
+  <script type="module">
+    const worker = new Worker('./build-index.worker.js', { type: 'module' });
+    const status = document.getElementById('status');
+    document.getElementById('build').onclick = () => {
+      worker.postMessage({ type: 'build' });
+      document.getElementById('build').disabled = true;
+    };
+    worker.onmessage = ({ data }) => {
+      if (data.type === 'status') status.textContent = data.message;
+      if (data.type === 'download')
+        status.textContent = `${data.file} ${data.progress.toFixed(0)}%`;
+      if (data.type === 'error') status.textContent = `오류: ${data.message}`;
+      if (data.type === 'checkpoint')
+        document.getElementById('output').value = JSON.stringify(data.index);
+      if (data.type === 'index') {
+        document.getElementById('output').value = JSON.stringify(data.index);
+        status.textContent = '전체 캐릭터 생성 완료';
+      }
+    };
+  </script>
+</html>
