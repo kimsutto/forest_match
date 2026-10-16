@@ -1,11 +1,11 @@
-import { loadEmbedder } from '../dist/model.mjs';
-import { MODEL, REVISION, IMAGE_TOKENS, PREPROCESS } from '../dist/match.mjs';
+import { loadEmbedder } from './embedder.mjs';
+import { MODEL, REVISION, IMAGE_TOKENS, PREPROCESS } from '../src/lib/matching/match.js';
 
 const send = (type, data = {}) => self.postMessage({ type, ...data });
 self.onmessage = async () => {
   try {
     const embed = await loadEmbedder(send);
-    const response = await fetch('../dist/characters.json');
+    const response = await fetch('../static/characters.json');
     if (!response.ok) throw new Error('캐릭터 목록을 읽지 못했습니다.');
     const catalog = await response.json();
     const index = {
@@ -22,7 +22,7 @@ self.onmessage = async () => {
         message: `도감 벡터 생성 ${index.items.length + 1} / ${catalog.length} · ${item.name}`,
       });
       const image = await fetch(
-        new URL(item.image, new URL('../dist/', import.meta.url)),
+        new URL(item.image, new URL('../static/', import.meta.url)),
       );
       if (!image.ok) throw new Error(`이미지 로딩 실패: ${item.id}`);
       index.items.push({

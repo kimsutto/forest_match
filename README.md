@@ -15,15 +15,19 @@ EmbeddingGemma 2가 사진을 벡터로 바꾸고, 도감 속 **566개 캐릭터
 
 ## 로컬 실행
 
-Python은 필수가 아닙니다. `dist/` 폴더를 localhost 주소로 제공할 **정적 웹서버**가 필요합니다.
-
-아래는 Python 3가 설치된 경우의 실행 예시입니다. 저장소를 내려받은 뒤 프로젝트 루트에서 실행하세요.
+[Node.js](https://nodejs.org)가 필요합니다. 저장소를 내려받은 뒤 프로젝트 루트에서 실행하세요.
 
 ```sh
-python3 -m http.server 8765 --bind 127.0.0.1 --directory dist
+npm install
 ```
 
-브라우저에서 [http://localhost:8765](http://localhost:8765)를 열고 사진을 선택한 뒤 **닮은 친구 찾기**를 누릅니다.
+```sh
+npm run dev
+```
+
+브라우저에서 [http://localhost:5173](http://localhost:5173)을 열고 사진을 선택한 뒤 **닮은 친구 찾기**를 누릅니다.
+
+배포용 정적 파일은 `npm run build`로 만들며 `build/` 폴더에 생성됩니다. 이 폴더는 아무 정적 웹서버로나 제공할 수 있습니다. 테스트는 `npm test`로 실행합니다.
 
 - WebGPU를 사용할 수 있는 브라우저가 필요합니다. Chrome·Edge를 권장하며, **macOS Safari 26.2에서도 실제 실행을 확인**했습니다.
 - Safari 검증 환경: **macOS 26.2 / Safari 26.2 (2026-10-12 확인)**. 잭슨·여울·고양이 예시 사진으로 실제 WebGPU 매칭을 확인했습니다. Safari 26.0·26.1 및 iPhone·iPad의 Safari는 직접 테스트하지 않았습니다.
@@ -31,7 +35,20 @@ python3 -m http.server 8765 --bind 127.0.0.1 --directory dist
 - 첫 분석 때 AI 가중치 약 **284MB**와 토크나이저·실행 파일을 다운로드합니다.
 - 사진은 **JPG, PNG, WebP / 최대 12MB / 4,000만 픽셀 이하**를 지원합니다. HEIC는 변환이 필요합니다.
 
-Python 대신 다른 정적 웹서버를 사용해도 됩니다. 서버는 파일을 제공하는 역할만 하며, 사진 분석은 브라우저에서 실행됩니다. 배포된 사이트는 주소에 접속하면 되므로 방문자가 Python을 설치할 필요는 없습니다.
+서버는 파일을 제공하는 역할만 하며, 사진 분석은 브라우저에서 실행됩니다. 배포된 사이트는 주소에 접속하면 되므로 방문자가 Node.js를 설치할 필요는 없습니다.
+
+## 코드 읽는 순서
+
+처음 코드를 본다면 이 순서를 추천합니다. 각 파일 맨 위에 "이 파일이 하는 일" 주석이 있습니다.
+
+1. [src/lib/matching/match.js](src/lib/matching/match.js) — 닮은 정도를 계산하는 수학 (코사인 유사도)
+2. [src/lib/matching/image.js](src/lib/matching/image.js) — 사진 검사와 다듬기 (흰 배경 · 512px)
+3. [src/lib/model/engines.js](src/lib/model/engines.js) — AI 엔진 목록과 선택
+4. [src/lib/model/worker.js](src/lib/model/worker.js) — 분석이 실제로 돌아가는 작업 스레드
+5. [src/routes/+page.svelte](src/routes/+page.svelte) — 화면 전체 흐름
+6. [src/lib/components/](src/lib/components/) — 화면 조각들 (사진 선택, 결과, 도감 등)
+
+전역 스타일은 [src/app.css](src/app.css)에 색상 토큰만 있고, 나머지 스타일은 각 컴포넌트 안에 있습니다.
 
 ## 어떻게 작동하나요?
 
